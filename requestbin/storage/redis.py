@@ -1,7 +1,11 @@
+from __future__ import division
 from __future__ import absolute_import
 
+
+from builtins import object
+from past.utils import old_div
 import time
-import cPickle as pickle
+import pickle as pickle
 
 import redis
 
@@ -9,12 +13,12 @@ from ..models import Bin
 
 from requestbin import config
 
-class RedisStorage():
+class RedisStorage(object):
     prefix = config.REDIS_PREFIX
 
     def __init__(self, bin_ttl):
         self.bin_ttl = bin_ttl
-        self.redis = redis.StrictRedis(host=config.REDIS_HOST, port=config.REDIS_PORT, db=config.REDIS_DB, password=config.REDIS_PASSWORD)
+        self.redis = redis.Redis(host=config.REDIS_HOST, port=config.REDIS_PORT, db=config.REDIS_DB, password=config.REDIS_PASSWORD)
 
     def _key(self, name):
         return '{}_{}'.format(self.prefix, name)
@@ -47,7 +51,7 @@ class RedisStorage():
 
     def avg_req_size(self):
         info = self.redis.info()
-        return info['used_memory'] / info['db0']['keys'] / 1024
+        return old_div(old_div(info['used_memory'], info['db0']['keys']), 1024)
 
     def lookup_bin(self, name):
         key = self._key(name)

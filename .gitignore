@@ -2,6 +2,9 @@
 *.egg-info
 **/*.pyc
 serviced.log
+venv
+.idea
+.vscode
 
 codekit-config.json
 

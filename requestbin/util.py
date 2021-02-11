@@ -1,10 +1,12 @@
+from __future__ import division
+from past.utils import old_div
 import time
 import random
 import base64
 
 def random_byte(gradient=None, floor=0):
     factor = gradient or 1
-    max = int(255 / factor)
+    max = int(old_div(255, factor))
     return random.randint(floor, max) * factor
 
 def solid16x16gif_datauri(r,g,b):

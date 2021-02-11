@@ -1,11 +1,11 @@
+from builtins import object
 import time
-import operator
 
 from ..models import Bin
 
 from requestbin import config
 
-class MemoryStorage():
+class MemoryStorage(object):
     cleanup_interval = config.CLEANUP_INTERVAL
 
     def __init__(self, bin_ttl):
@@ -13,19 +13,19 @@ class MemoryStorage():
         self.bins = {}
         self.request_count = 0
 
-    def do_start(self):
-        self.spawn(self._cleanup_loop)
+    # def do_start(self):
+    #     self.spawn(self._cleanup_loop)
+    #
+    # def _cleanup_loop(self):
+    #     while True:
+    #         self.async.sleep(self.cleanup_interval)
+    #         self._expire_bins()
 
-    def _cleanup_loop(self):
-        while True:
-            self.async.sleep(self.cleanup_interval)
-            self._expire_bins()
-
-    def _expire_bins(self):
-        expiry = time.time() - self.bin_ttl
-        for name, bin in self.bins.items():
-            if bin.created < expiry:
-                self.bins.pop(name)
+    # def _expire_bins(self):
+    #     expiry = time.time() - self.bin_ttl
+    #     for name, bin in list(self.bins.items()):
+    #         if bin.created < expiry:
+    #             self.bins.pop(name)
 
     def create_bin(self, private=False):
         bin = Bin(private)
